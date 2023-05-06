@@ -98,7 +98,7 @@ exports.enrollInInterview = async(req, res) => {
                                 to: email,
                                 subject: "B.A. College of Engineering and Technology Placement",
                                 text: `Hi ${student.name}`,
-                                html: `Hi ${student.name} </br> Interivew Schedul with ${interview.companyName} on ${interview.date} and interview start time is ${interview.time} </br> Please arrived college before time </br> regards college campus`,
+                                html: `Hi ${student.name} </br> Interivew Schedule with ${interview.companyName} on ${interview.date} and interview start time is ${interview.time} </br> Please arrived college before time </br> regards college campus`,
                             })                            
                             return res.status(200).json({msg: `${student.name} enrolled in ${interview.companyName} interview!`, success: true, info})
                         }else{
@@ -135,7 +135,7 @@ exports.enrollInInterview = async(req, res) => {
                             to: email,
                             subject: "B.A. College of Engineering and Technology Placement",
                             text: `Hi ${student.name}`,
-                            html: `Hi ${student.name} </br> Interivew Schedul with ${interview.companyName} on ${interview.date} and interview start time is ${interview.time} </br> Please arrived college before time </br> regards college campus`,
+                            html: `Hi ${student.name} </br> Interivew Schedule with ${interview.companyName} on ${interview.date} and interview start time is ${interview.time} </br> Please arrived college before time </br> regards college campus`,
                         })
                         return res.status(200).json({msg: `${student.name} enrolled in ${interview.companyName} interview!`, success: true, info})
                     }else{

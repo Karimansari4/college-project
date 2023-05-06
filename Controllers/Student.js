@@ -83,13 +83,13 @@ exports.addStudent = async(req, res) => {
 
 exports.updateStudent = async(req, res) => {
     const id = req.params.id
-    const { name, college, batch, dsaScore, reactScore, webDScore, placementStatus } = req.body
+    const { name, email, college, batch, dsaScore, reactScore, webDScore, placementStatus } = req.body
 
     try {
 
         const checkStudent = await Students.findById(id)
         if(checkStudent){
-            const result = await Students.findByIdAndUpdate({_id: id}, {name: name, college: college, batch: batch, dsaScore: dsaScore, reactScore: reactScore, webDScore: webDScore, status: placementStatus})
+            const result = await Students.findByIdAndUpdate({_id: id}, {name: name, email: email, college: college, batch: batch, dsaScore: dsaScore, reactScore: reactScore, webDScore: webDScore, status: placementStatus})
             if(result){
                 return res.status(200).json({msg: `Student ${result.name} has been updated successfully.`, success: true})
             }else{
