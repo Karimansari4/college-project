@@ -20,6 +20,26 @@ module.exports.getStudents = async(req, res) => {
     }
 }
 
+exports.getById = async(req, res) => {
+    const id = req.params.id
+
+    try {
+        if(!id){
+            return res.status(400).json({msg: 'Access Denied?', success: false})
+        }else{
+            const result = await Students.findById(id)
+            if(result){
+                return res.status(200).json({msg: 'ok', result, success: true})
+            }else{
+                return res.status(400).json({msg: "No Data found?", success: false})
+            }
+        }
+    } catch (error) {
+        console.log("error on getById: ", error);
+        return res.status(500).json({err: error.message, error, success: false})
+    }
+}
+
 exports.addStudent = async(req, res) => {
     const {name, email, batch, college, placementStatus, dsaScore, reactScore, webDScore} = req.body
 
@@ -87,13 +107,17 @@ exports.updateStudent = async(req, res) => {
 
 exports.deleteStudent = async(req, res) => {
     const id = req.params.id
-console.log("id: ", id);
+    
     try {
 
         const findStudent = await Students.findById({_id: id})
+
         if(findStudent){
+
             const interviewsOfStudent = findStudent.interviews
+
             if(interviewsOfStudent.length > 0){
+                
                 for(let interview of interviewsOfStudent){
                     await Interviews.findOneAndUpdate({companyName: interview.company}, {$pull: {Students: {student: id}}})
                 }
@@ -110,7 +134,6 @@ console.log("id: ", id);
                 }else{
                     return res.status(400).json({msg: `${findStudent.name} failed to delete?`, success: false})
                 }
-                // return res.status(404).json({msg: `Interview not scheduled for ${findStudent.name}`, success: false})
             }
         }
         

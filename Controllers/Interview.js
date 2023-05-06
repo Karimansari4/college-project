@@ -1,5 +1,6 @@
 const Interviews = require('../Models/Interviews')
 const Students = require('../Models/Students')
+const nodemailer = require('nodemailer')
 
 exports.getAllInterviews = async(req, res) => {
     try {
@@ -62,7 +63,6 @@ exports.enrollInInterview = async(req, res) => {
                             return res.status(400).json({msg: `${student.name} already enterolled in ${interview.companyName} interivew!`, success: true})
                         }else{
                             console.log("run");
-
                         }
                     }
                     
@@ -72,11 +72,35 @@ exports.enrollInInterview = async(req, res) => {
                         let studentObj = { student: student._id, result: result}
                         const scheduleInterivew = await interview.updateOne({$push: {students: studentObj}})
                         
-                        const assignedSuccess = await student.updateOne({$push: {interviews: {company: interview.companyName, date: interview.date, result: result}}})
+                        const assignedSuccess = await student.updateOne({$push: {interviews: {company: interview.companyName, date: interview.date, time: interview.time, result: result}}})
                         
                         if(scheduleInterivew && assignedSuccess){
-                            
-                            return res.status(200).json({msg: `${student.name} enrolled in ${interview.companyName} interview!`, success: true})
+
+                            // creating mail servies
+
+                            let transporter = nodemailer.createTransport({
+                                service: 'gmail',
+                                host: "smtp.gmail.com",
+                                port: 587,
+                                secure: false,
+                                auth: {
+                                    user: "goprahul545@gmail.com",
+                                    pass: "zdoqxecvhrdhdybv",
+                                },
+                                tls: {
+                                  // do not fail on invalid certs
+                                  rejectUnauthorized: false,
+                                },
+                            })
+
+                            let info = await transporter.sendMail({
+                                from: 'goprahul545@gmail.com',
+                                to: email,
+                                subject: "B.A. College of Engineering and Technology Placement",
+                                text: `Hi ${student.name}`,
+                                html: `Hi ${student.name} </br> Interivew Schedul with ${interview.companyName} on ${interview.date} and interview start time is ${interview.time} </br> Please arrived college before time </br> regards college campus`,
+                            })                            
+                            return res.status(200).json({msg: `${student.name} enrolled in ${interview.companyName} interview!`, success: true, info})
                         }else{
                             return res.status(400).json({msg: `Failed to schedul ${student.name} interview with ${interview.companyName}?`, success: false})
                         }
@@ -86,13 +110,34 @@ exports.enrollInInterview = async(req, res) => {
                     let studentObj = { student: student._id, result: result}
                     const scheduleInterivew = await interview.updateOne({$push: {students: studentObj}})
                     
-                    const assignedSuccess = await student.updateOne({$push: {interviews: {company: interview.companyName, date: interview.date, result: result}}})
+                    const assignedSuccess = await student.updateOne({$push: {interviews: {company: interview.companyName, date: interview.date, time: interview.time, result: result}}})
                     
                     if(scheduleInterivew && assignedSuccess){
-                        console.log("student: ", student);
-                        console.log("interview: ", interview);
-                        console.log("enrolled: ", `${student.name} enrolled in ${interview.companyName} interview!`, 'success: true');
-                        return res.status(200).json({msg: `${student.name} enrolled in ${interview.companyName} interview!`, success: true})
+                        // creating mail servies
+
+                        let transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            host: "smtp.gmail.com",
+                            port: 587,
+                            secure: false,
+                            auth: {
+                                user: "goprahul545@gmail.com",
+                                pass: "zdoqxecvhrdhdybv",
+                            },
+                            tls: {
+                              // do not fail on invalid certs
+                              rejectUnauthorized: false,
+                            },
+                        })
+
+                        let info = await transporter.sendMail({
+                            from: 'goprahul545@gmail.com',
+                            to: email,
+                            subject: "B.A. College of Engineering and Technology Placement",
+                            text: `Hi ${student.name}`,
+                            html: `Hi ${student.name} </br> Interivew Schedul with ${interview.companyName} on ${interview.date} and interview start time is ${interview.time} </br> Please arrived college before time </br> regards college campus`,
+                        })
+                        return res.status(200).json({msg: `${student.name} enrolled in ${interview.companyName} interview!`, success: true, info})
                     }else{
                         return res.status(400).json({msg: `Failed to schedul ${student.name} interview with ${interview.companyName}?`, success: false})
                     }

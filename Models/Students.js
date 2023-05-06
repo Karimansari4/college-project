@@ -45,6 +45,10 @@ const StudentSchema = new Schema({
             type: String,
             reqruied: true
         },
+        time: {
+            type: String,
+            required: true
+        },
         result: {
             type: String,
             enum: ["PASS", "FAIL", "On Hold", "Didn't Attempt"]
